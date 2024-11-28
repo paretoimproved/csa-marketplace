@@ -59,4 +59,9 @@ main (production)
     ├── feature/phase1/auth
     ├── feature/phase1/listings
     ├── feature/phase1/profiles
-    └── ...
+    └── feature/phase2/search
+    └── feature/phase2/orders
+    └── feature/phase3/payment
+    └── feature/phase3/subscriptions
+    └── feature/phase3/reviews
+    └── feature/phase3/messaging
