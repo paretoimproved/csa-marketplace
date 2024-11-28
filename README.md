@@ -7,9 +7,56 @@ This project is a react web application that allows local farmers to list their 
 
 ## Getting Started
 
+1. Prerequisites
+   - Node.js (v18 or higher)
+   - npm (v9 or higher)
+
+2. Installation
+   ```bash
+   npm create vite@latest csa-marketplace -- --template react-ts
+   cd csa-marketplace
+   npm install
+   ```
+
+3. Run Development Server
+   ```bash
+   npm run dev
+   ```
 
 ## Technical Architecture
-[Overview of the tech stack and major components]
+
+### Phase 1 - Basic Features
+- User Authentication (Farmers & Customers)
+- Basic CSA Share Listings
+- Simple Profile Management
+
+### Phase 2 - Core Features
+- CSA Share Management for Farmers
+- Search and Filter Functionality
+- Order Processing
+
+### Phase 3 - Advanced Features
+- Payment Integration
+- Subscription Management
+- Reviews and Ratings
+- Messaging System
+
+## Tech Stack
+- Frontend: React with TypeScript
+- Routing: React Router
+- State Management: React Context
+- Styling: TailwindCSS
+- Authentication: JWT
+- API: RESTful
 
 ## Contributing
-[Guidelines for contributing to the project]
+Please read our contributing guidelines before submitting pull requests.
+
+## Git Branching Strategy
+
+main (production)
+├── develop (development)
+    ├── feature/phase1/auth
+    ├── feature/phase1/listings
+    ├── feature/phase1/profiles
+    └── ...
