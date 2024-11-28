@@ -32,6 +32,8 @@ export const validateUser = async (email: string, password: string) => {
     
     const isValid = await bcrypt.compare(password, user.password);
     console.log('Password validation:', isValid ? 'valid' : 'invalid');
+    console.log('Stored hash:', user.password);
+    console.log('Provided password:', password);
     
     if (!isValid) {
       console.log('Invalid password');

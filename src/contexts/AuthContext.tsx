@@ -4,22 +4,35 @@ import { loginUser } from '../services/api';
 interface User {
   id: string;
   email: string;
-  role: 'farmer' | 'customer';
+  role: 'FARMER' | 'CUSTOMER';
   firstName: string;
   lastName: string;
 }
 
 interface AuthContextType {
-  user: User | null;
-  isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [user, setUser] = useState<User | null>(null);
+    user: User | null;
+    isAuthenticated: boolean;
+    login: (email: string, password: string) => Promise<void>;
+    logout: () => void;
+    register: (userData: {
+      email: string;
+      password: string;
+      firstName: string;
+      lastName: string;
+      role: 'FARMER' | 'CUSTOMER';
+    }) => Promise<void>;
+  }
+  
+  // Create the context
+  const AuthContext = createContext<AuthContextType | undefined>(undefined);
+  
+  // Create the provider component
+  export const AuthProvider = ({ children }: { children: ReactNode }) => {
+    const [user, setUser] = useState<User | null>(() => {
+      // Initialize user from localStorage if available
+      const savedUser = localStorage.getItem('user');
+      return savedUser ? JSON.parse(savedUser) : null;
+    });
   
     const login = async (email: string, password: string) => {
       try {
@@ -42,13 +55,44 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(null);
   };
 
+  const register = async (userData: {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    role: 'FARMER' | 'CUSTOMER';
+  }) => {
+    try {
+      const response = await fetch('http://localhost:3001/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Registration failed');
+      }
+
+      // Auto-login after successful registration
+      await login(userData.email, userData.password);
+    } catch (error) {
+      console.error('Registration error:', error);
+      throw error;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
+// Create the useAuth hook
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

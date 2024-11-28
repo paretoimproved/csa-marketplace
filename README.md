@@ -65,3 +65,39 @@ main (production)
     └── feature/phase3/subscriptions
     └── feature/phase3/reviews
     └── feature/phase3/messaging
+
+## Authentication Features
+
+### Current Implementation
+- **User Registration**
+  - Secure password hashing with bcrypt
+  - Role-based registration (FARMER/CUSTOMER)
+  - Form validation and error handling
+  - Automatic login after registration
+
+- **User Login**
+  - Secure credential verification
+  - Session management with localStorage
+  - Protected routes for authenticated users
+  - Role-based access control
+
+- **Database Integration**
+  - PostgreSQL database with Prisma ORM
+  - User model with email uniqueness
+  - Secure password storage
+  - Role management
+
+### Planned Features
+- [ ] Email verification for new accounts
+- [ ] Password reset functionality
+- [ ] Remember me functionality
+- [ ] Session timeout
+- [ ] Password strength requirements
+
+### Tech Stack
+- Frontend: React with TypeScript
+- Backend: Express.js
+- Database: PostgreSQL
+- ORM: Prisma
+- Authentication: Custom JWT implementation
+- Styling: Tailwind CSS
