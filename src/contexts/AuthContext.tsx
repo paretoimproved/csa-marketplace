@@ -77,8 +77,9 @@ interface AuthContextType {
         throw new Error(data.error || 'Registration failed');
       }
 
-      // Auto-login after successful registration
-      await login(userData.email, userData.password);
+      // Don't auto-login after registration since email needs to be verified
+      // await login(userData.email, userData.password);
+      return data;
     } catch (error) {
       console.error('Registration error:', error);
       throw error;
@@ -99,4 +100,16 @@ export const useAuth = () => {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
+};
+
+interface LoginOptions {
+  rememberMe?: boolean;
+}
+
+const login = async (
+  email: string, 
+  password: string, 
+  options?: LoginOptions
+) => {
+  // ... login logic with remember me
 };

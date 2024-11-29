@@ -8,17 +8,33 @@ generator client {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  role      Role     @default(CUSTOMER)
-  firstName String
-  lastName  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                    String    @id @default(uuid())
+  email                 String    @unique
+  password              String
+  firstName             String
+  lastName              String
+  role                  Role      @default(CUSTOMER)
+  emailVerified         Boolean   @default(false)
+  verificationToken     String?   @unique
+  verificationExpires   DateTime?
+  resetToken           String?    @unique
+  resetTokenExpires    DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  sessions            UserSession[]
 }
 
 enum Role {
   FARMER
   CUSTOMER
+}
+
+model UserSession {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([token])
 }

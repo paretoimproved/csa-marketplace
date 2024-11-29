@@ -10,6 +10,7 @@
     "cors": "^2.8.5",
     "express": "^4.21.1",
     "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.16",
     "pg": "^8.13.1",
     "postcss": "^8.4.49",
     "react": "^18.3.1",
@@ -18,14 +19,17 @@
     "tailwindcss": "^3.4.15"
   },
   "scripts": {
-    "dev": "concurrently \"vite\" \"ts-node --project tsconfig.server.json server/index.ts\"",
+    "dev": "concurrently \"vite\" \"ts-node --project tsconfig.server.json server/index.ts\" \"npx prisma studio\"",
+    "dev:all": "concurrently \"vite\" \"ts-node --project tsconfig.server.json server/index.ts\" \"npx prisma studio\"",
     "server": "ts-node server/index.ts",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "create-user": "ts-node scripts/createUser.ts"
+    "create-user": "ts-node scripts/createUser.ts",
+    "setup-email": "ts-node --project tsconfig.scripts.json scripts/setupTestEmail.ts",
+    "prisma": "npx prisma studio"
   },
   "jest": {
     "testEnvironment": "jsdom",
@@ -42,6 +46,7 @@
     "@testing-library/user-event": "^14.5.2",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
+    "@types/nodemailer": "^6.4.17",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",

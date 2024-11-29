@@ -8,6 +8,7 @@ export const Login = () => {
   const [error, setError] = useState('');
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [rememberMe, setRememberMe] = useState(false);
 
   console.log('Login component rendered');
 
@@ -54,6 +55,16 @@ export const Login = () => {
             />
           </div>
           <div className="flex items-center justify-between">
+            <div className="text-sm">
+              <Link
+                to="/forgot-password"
+                className="font-medium text-indigo-600 hover:text-indigo-500"
+              >
+                Forgot your password?
+              </Link>
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
             <button
               type="submit"
               className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700"
@@ -70,4 +81,12 @@ export const Login = () => {
       </div>
     </div>
   );
+};
+
+export const createAuthToken = (
+  userId: string,
+  rememberMe: boolean
+) => {
+  const expiresIn = rememberMe ? '30d' : '24h';
+  // ... token creation logic
 };
