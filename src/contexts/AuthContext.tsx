@@ -1,115 +1,80 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
-import { loginUser } from '../services/api';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface User {
   id: string;
   email: string;
-  role: 'FARMER' | 'CUSTOMER';
   firstName: string;
   lastName: string;
+  role: 'FARMER' | 'CUSTOMER';
 }
 
 interface AuthContextType {
-    user: User | null;
-    isAuthenticated: boolean;
-    login: (email: string, password: string) => Promise<void>;
-    logout: () => void;
-    register: (userData: {
-      email: string;
-      password: string;
-      firstName: string;
-      lastName: string;
-      role: 'FARMER' | 'CUSTOMER';
-    }) => Promise<void>;
-  }
-  
-  // Create the context
-  const AuthContext = createContext<AuthContextType | undefined>(undefined);
-  
-  // Create the provider component
-  export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [user, setUser] = useState<User | null>(() => {
-      // Initialize user from localStorage if available
-      const savedUser = localStorage.getItem('user');
-      return savedUser ? JSON.parse(savedUser) : null;
-    });
-  
-    const login = async (email: string, password: string) => {
-      try {
-        const { user, error } = await loginUser(email, password);
-        
-        if (error || !user) {
-          throw new Error(error || 'Invalid credentials');
-        }
-        
-        localStorage.setItem('user', JSON.stringify(user));
-        setUser(user);
-      } catch (error) {
-        console.error('Login error:', error);
-        throw error;
-      }
-    };  
+  user: User | null;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => void;
+}
 
-  const logout = () => {
-    localStorage.removeItem('user');
-    setUser(null);
-  };
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-  const register = async (userData: {
-    email: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-    role: 'FARMER' | 'CUSTOMER';
-  }) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const login = async (email: string, password: string) => {
     try {
-      const response = await fetch('http://localhost:3001/api/register', {
+      const response = await fetch('http://localhost:3001/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(userData),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Registration failed');
+        throw new Error(data.error || 'Login failed');
       }
 
-      // Don't auto-login after registration since email needs to be verified
-      // await login(userData.email, userData.password);
-      return data;
+      setUser(data.user);
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+      if (data.user.role === 'FARMER') {
+        navigate('/farm-dashboard');
+      } else {
+        navigate('/customer-dashboard');
+      }
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error('Login error:', error);
       throw error;
     }
   };
 
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+    navigate('/login');
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, logout, register }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Create the useAuth hook
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-};
-
-interface LoginOptions {
-  rememberMe?: boolean;
-}
-
-const login = async (
-  email: string, 
-  password: string, 
-  options?: LoginOptions
-) => {
-  // ... login logic with remember me
 };

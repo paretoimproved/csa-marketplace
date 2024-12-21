@@ -73,26 +73,43 @@ main (production)
   - Secure password hashing with bcrypt
   - Role-based registration (FARMER/CUSTOMER)
   - Form validation and error handling
-  - Automatic login after registration
+  - Email verification system
+  - Secure token generation
 
 - **User Login**
   - Secure credential verification
   - Session management with localStorage
   - Protected routes for authenticated users
   - Role-based access control
+  - Email verification check
+
+- **Password Reset**
+  - Secure reset token generation
+  - Time-limited reset links (1 hour expiry)
+  - Email-based password reset flow
+  - Token verification system
+  - Password update confirmation
+
+- **Email System**
+  - Verification emails for new accounts
+  - Password reset notifications
+  - HTML email templates
+  - Email sending status tracking
+  - Development setup with Ethereal
 
 - **Database Integration**
   - PostgreSQL database with Prisma ORM
   - User model with email uniqueness
   - Secure password storage
   - Role management
+  - Token management for verification and reset
 
 ### Planned Features
-- [ ] Email verification for new accounts
-- [ ] Password reset functionality
 - [ ] Remember me functionality
 - [ ] Session timeout
 - [ ] Password strength requirements
+- [ ] Multi-factor authentication
+- [ ] Account recovery options
 
 ### Tech Stack
 - Frontend: React with TypeScript
@@ -100,4 +117,5 @@ main (production)
 - Database: PostgreSQL
 - ORM: Prisma
 - Authentication: Custom JWT implementation
+- Email: Nodemailer with Ethereal (dev)
 - Styling: Tailwind CSS
