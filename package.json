@@ -13,9 +13,11 @@
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.16",
     "pg": "^8.13.1",
+    "postcss": "^8.4.49",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^7.0.1"
+    "react-router-dom": "^7.0.1",
+    "tailwindcss": "^3.4.15"
   },
   "scripts": {
     "dev": "concurrently \"vite\" \"ts-node --project tsconfig.server.json server/index.ts\" \"npx prisma studio\"",
@@ -54,7 +56,6 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
-    "postcss": "^8.5.1",
     "prisma": "^6.0.0",
     "tailwindcss": "^3.4.17",
     "ts-jest": "^29.2.5",
