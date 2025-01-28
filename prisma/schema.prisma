@@ -22,6 +22,7 @@ model User {
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
   sessions            UserSession[]
+  farmProfile          FarmProfile?
 }
 
 enum Role {
@@ -37,4 +38,54 @@ model UserSession {
   user      User     @relation(fields: [userId], references: [id])
 
   @@index([token])
+}
+
+model FarmProfile {
+  id          String   @id @default(uuid())
+  farmerId    String   @unique
+  farmer      User     @relation(fields: [farmerId], references: [id])
+  name        String
+  description String
+  location    Location?
+  images      Image[]
+  products    Product[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Location {
+  id          String      @id @default(uuid())
+  farmId      String      @unique
+  farm        FarmProfile @relation(fields: [farmId], references: [id])
+  address     String
+  city        String
+  state       String
+  zipCode     String
+  latitude    Float?
+  longitude   Float?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Image {
+  id          String      @id @default(uuid())
+  farmId      String
+  farm        FarmProfile @relation(fields: [farmId], references: [id])
+  url         String
+  alt         String?
+  isPrimary   Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Product {
+  id          String      @id @default(uuid())
+  farmId      String
+  farm        FarmProfile @relation(fields: [farmId], references: [id])
+  name        String
+  description String?
+  category    String
+  seasonal    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 }

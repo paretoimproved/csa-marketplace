@@ -16,17 +16,16 @@ export const sendVerificationEmail = async (
   token: string,
   firstName: string
 ) => {
-  const verificationUrl = `http://localhost:5173/verify-email?token=${token}`;
+  const verificationUrl = `http://localhost:3001/api/verify-email?token=${token}`;
 
   const mailOptions = {
     from: '"CSA Marketplace" <noreply@csamarketplace.com>',
     to: email,
-    subject: 'Verify your email address',
+    subject: 'Verify Your Email',
     html: `
-      <h1>Welcome to CSA Marketplace, ${firstName}!</h1>
-      <p>Please verify your email address by clicking the link below:</p>
+      <h1>Hello ${firstName}!</h1>
+      <p>Please click the link below to verify your email address:</p>
       <a href="${verificationUrl}">Verify Email</a>
-      <p>This link will expire in 24 hours.</p>
       <p>If you didn't create an account, you can safely ignore this email.</p>
     `
   };

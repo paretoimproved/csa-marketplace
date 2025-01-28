@@ -97,21 +97,22 @@ app.post('/api/register', async (req: Request, res: Response) => {
   }
 });
 
-app.post('/api/verify-email', async (req: Request, res: Response) => {
+app.get('/api/verify-email', async (req: Request, res: Response) => {
   try {
-    const { token } = req.body;
+    const { token } = req.query;
     
     if (!token) {
       return res.status(400).json({ error: 'Verification token is required' });
     }
 
-    const user = await verifyEmail(token);
-    return res.json({ message: 'Email verified successfully' });
+    await verifyEmail(token as string);
+    
+    // Redirect to the success page
+    res.redirect('http://localhost:5173/verify-success');
   } catch (error) {
     console.error('Verification error:', error);
-    return res.status(400).json({ 
-      error: error instanceof Error ? error.message : 'Verification failed' 
-    });
+    // Redirect to an error page or show error message
+    res.redirect(`http://localhost:5173/verify-error?message=${encodeURIComponent(error instanceof Error ? error.message : 'Verification failed')}`);
   }
 });
 
@@ -214,6 +215,89 @@ app.post('/api/reset-password', async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Password reset error:', error);
     res.status(500).json({ error: 'Failed to reset password' });
+  }
+});
+
+// Get farm profile by farmer ID
+app.get('/api/farms/farmer/:farmerId', async (req: Request, res: Response) => {
+  try {
+    const { farmerId } = req.params;
+    
+    const farmProfile = await prisma.farmProfile.findUnique({
+      where: { farmerId },
+      include: {
+        location: true,
+        images: true,
+        products: true,
+      },
+    });
+
+    if (!farmProfile) {
+      return res.status(404).json({ error: 'Farm profile not found' });
+    }
+
+    res.json(farmProfile);
+  } catch (error) {
+    console.error('Error fetching farm profile:', error);
+    res.status(500).json({ error: 'Failed to fetch farm profile' });
+  }
+});
+
+// Create farm profile
+app.post('/api/farms', async (req: Request, res: Response) => {
+  try {
+    const { farmerId, name, description, address, city, state, zipCode } = req.body;
+
+    const farmProfile = await prisma.farmProfile.create({
+      data: {
+        farmerId,
+        name,
+        description,
+        location: {
+          create: {
+            address,
+            city,
+            state,
+            zipCode,
+          },
+        },
+      },
+      include: {
+        location: true,
+      },
+    });
+
+    res.status(201).json(farmProfile);
+  } catch (error) {
+    console.error('Error creating farm profile:', error);
+    res.status(500).json({ error: 'Failed to create farm profile' });
+  }
+});
+
+// Update the farm profile GET endpoint
+app.get('/api/farms/:id', async (req: Request, res: Response) => {
+  try {
+    const farm = await prisma.farmProfile.findUnique({
+      where: { id: req.params.id },
+      include: { 
+        location: true,
+        crops: {  // Add crop calendar data
+          select: {
+            name: true,
+            startMonth: true,
+            endMonth: true,
+            harvestWeek: true,
+            yieldEstimate: true
+          }
+        }
+      }
+    });
+
+    if (!farm) return res.status(404).json({ error: 'Farm not found' });
+    res.json(farm);
+  } catch (error) {
+    console.error('Error fetching farm profile:', error);
+    res.status(500).json({ error: 'Failed to fetch farm profile' });
   }
 });
 
