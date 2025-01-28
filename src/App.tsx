@@ -8,12 +8,13 @@ import { EmailVerificationSuccess } from './pages/EmailVerificationSuccess';
 import { EmailVerificationError } from './pages/EmailVerificationError';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthProvider } from './contexts/AuthContext';
+import { HomePage } from './pages/HomePage';
 
 function App() {
   return (
     <AuthProvider>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />

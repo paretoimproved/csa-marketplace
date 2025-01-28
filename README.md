@@ -1,6 +1,5 @@
-# CSA Marketplace
-
-A web application connecting local farmers with community members for Community Supported Agriculture shares.
+# FarmLink 🌱
+**Reliable Farm Revenue, Convenient Local Access**
 
 ## Project Overview
 This project is a react web application that allows local farmers to list their Community Supported Agriculture (CSA) shares and community members to browse and purchase them. The goal is to create a platform that supports local agriculture and fosters a sense of community around shared farming practices.
@@ -119,3 +118,87 @@ main (production)
 - Authentication: Custom JWT implementation
 - Email: Nodemailer with Ethereal (dev)
 - Styling: Tailwind CSS
+
+## Core Challenges
+
+### 🌾 Farmer Challenges
+**Unstable Revenue Streams**  
+Small farms remain dependent on volatile markets with:
+- No guaranteed weekly income
+- High customer acquisition costs
+- Limited direct-to-consumer infrastructure
+
+### 🛒 Consumer Pain Points
+**Inaccessible Local Food**  
+Despite demand, shoppers face:
+- Fragmented farm discovery
+- Inconvenient pickup options
+- No quality standardization
+
+## FarmLink's Solutions
+
+| Farmers Get | Consumers Get |
+|-------------|---------------|
+| ✅ Predictable CSA income | ✅ One-stop farm discovery |
+| ✅ Direct payment processing | ✅ Flexible subscription management |
+| ✅ Real-time demand insights | ✅ Verified quality standards |
+
+## Tech Stack Reality Check
+
+**Current Implementation**
+```typescript:server/index.ts
+startLine: 221
+endLine: 244
+```
+- ✅ Working farm profile system
+- ✅ Basic subscription tracking
+- ✅ Location management
+
+**Gaps vs MVP Goals**
+```prisma:schema.prisma
+startLine: 42
+endLine: 54
+```
+- Missing Stripe Connect integration
+- No subscription plan models
+- Limited product/crop tracking
+
+## Strategic Focus
+
+1. **Immediate Priorities**
+   - Complete Stripe Connect onboarding flow
+   - Build subscription plan CRUD interface
+   - Implement 10-mile radius search (use existing location data)
+
+2. **Validation Sequencing**
+   - Pilot with 3 farms using manual payment tracking
+   - Collect consumer feedback on profile pages
+   - Delay AI features until core validated
+
+3. **Risk Mitigation**
+   - Add subscription pause/cancel functionality
+   - Implement basic dispute resolution system
+   - Create farmer payment protection fund
+
+## Documentation Updates Needed
+
+1. **FARMER_ONBOARDING.md**
+   - Add visual guide using:
+   ```typescript:src/components/farm/FarmProfileView.tsx
+   startLine: 7
+   endLine: 35
+   ```
+2. **API_REFERENCE.md**
+   - Document existing endpoints:
+   ```typescript:server/index.ts
+   startLine: 278
+   endLine: 302
+   ```
+3. **ROADMAP.md**
+   - Align phase system with current progress:
+   ```markdown:README.md
+   startLine: 28
+   endLine: 43
+   ```
+
+Would you like me to generate any of these documentation files in full based on the current codebase?

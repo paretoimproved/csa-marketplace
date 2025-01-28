@@ -274,6 +274,33 @@ app.post('/api/farms', async (req: Request, res: Response) => {
   }
 });
 
+// Update the farm profile GET endpoint
+app.get('/api/farms/:id', async (req: Request, res: Response) => {
+  try {
+    const farm = await prisma.farmProfile.findUnique({
+      where: { id: req.params.id },
+      include: { 
+        location: true,
+        crops: {  // Add crop calendar data
+          select: {
+            name: true,
+            startMonth: true,
+            endMonth: true,
+            harvestWeek: true,
+            yieldEstimate: true
+          }
+        }
+      }
+    });
+
+    if (!farm) return res.status(404).json({ error: 'Farm not found' });
+    res.json(farm);
+  } catch (error) {
+    console.error('Error fetching farm profile:', error);
+    res.status(500).json({ error: 'Failed to fetch farm profile' });
+  }
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

@@ -1,89 +1,56 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { FarmProfile as FarmProfileType } from '../types';
 import { CreateFarmProfile } from '../components/farm/CreateFarmProfile';
 import { FarmProfileView } from '../components/farm/FarmProfileView';
+import { useFarmProfile } from '../hooks/useFarmProfile';
+import { farmApi } from '../lib/api';
+import { AppLayout } from '../components/layout/AppLayout';
 
 export const FarmDashboard = () => {
   const { user } = useAuth();
-  const [profile, setProfile] = useState<FarmProfileType | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      if (!user?.id) return;
-      
-      try {
-        const response = await fetch(`http://localhost:3001/api/farms/farmer/${user.id}`);
-        const data = await response.json();
-        
-        if (!response.ok) {
-          throw new Error(data.error || 'Failed to fetch farm profile');
-        }
-        
-        setProfile(data);
-      } catch (err) {
-        console.error('Error fetching profile:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load profile');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProfile();
-  }, [user]);
+  const { profile, loading, error, refetchProfile } = useFarmProfile(user?.id);
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
-      </div>
+      <AppLayout>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900" />
+        </div>
+      </AppLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <h1 className="text-xl font-semibold">Farm Dashboard</h1>
-            </div>
-            <div className="flex items-center">
-              <span className="text-gray-700 mr-4">Welcome, {user?.firstName}!</span>
-            </div>
+    <AppLayout>
+      <div className="space-y-6">
+        {error?.includes('404') ? (
+          <div className="bg-white rounded-lg border border-gray-100 p-8">
+            <h2 className="text-xl font-semibold text-gray-900">Welcome to CSA Marketplace</h2>
+            <p className="mt-2 text-sm text-gray-600">Let's set up your farm profile to get started.</p>
+            <CreateFarmProfile onProfileCreated={refetchProfile} />
           </div>
-        </div>
-      </nav>
-
-      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-            <span className="block sm:inline">{error}</span>
+        ) : profile ? (
+          <FarmProfileView profile={profile} />
+        ) : null}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+            <h3 className="text-lg font-semibold mb-2">🛒 Current Orders</h3>
+            <div className="text-3xl font-bold text-emerald-600">24</div>
+            <p className="text-sm text-gray-500">Active subscriptions</p>
           </div>
-        )}
-        
-        <div className="px-4 py-6 sm:px-0">
-          {profile ? (
-            <FarmProfileView profile={profile} />
-          ) : (
-            <div className="bg-white shadow rounded-lg">
-              <div className="px-4 py-5 sm:p-6">
-                <h3 className="text-lg leading-6 font-medium text-gray-900">
-                  Welcome to CSA Marketplace!
-                </h3>
-                <div className="mt-2 max-w-xl text-sm text-gray-500">
-                  <p>Let's get started by setting up your farm profile.</p>
-                </div>
-                <div className="mt-5">
-                  <CreateFarmProfile onProfileCreated={setProfile} />
-                </div>
-              </div>
-            </div>
-          )}
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+            <h3 className="text-lg font-semibold mb-2">📅 Next Delivery</h3>
+            <div className="text-3xl font-bold text-amber-600">Sept 15</div>
+            <p className="text-sm text-gray-500">Prepare harvest list</p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+            <h3 className="text-lg font-semibold mb-2">🌱 Inventory</h3>
+            <div className="text-3xl font-bold text-rose-600">82%</div>
+            <p className="text-sm text-gray-500">Weekly boxes remaining</p>
+          </div>
         </div>
       </div>
-    </div>
+    </AppLayout>
   );
 };
