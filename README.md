@@ -1,8 +1,31 @@
 # FarmLink 🌱
-**Direct Farm-to-Table Connections in 3 Clicks**
+**Direct Farm-to-Table Connections**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Stripe Enabled](https://img.shields.io/badge/Powered%20by-Stripe-635bff.svg)](https://stripe.com)
+![Tech Stack](https://skillicons.dev/icons?i=ts,react,tailwind,nodejs,express,prisma,postgres,jest)
+
+## Project Overview
+This project is a React web application that enables local farmers to list their Community Supported Agriculture (CSA) shares and allows community members to browse and purchase them. Our goal is to:
+
+- 🌾 Support local agriculture through direct farm-to-consumer connections
+- 🛒 Simplify CSA share discovery and management
+- 🤝 Foster community engagement around sustainable farming practices
+- 💳 Provide secure payment infrastructure for agricultural transactions
+
+## Key Features
+
+### 🌾 Farmer Features
+- CSA share listing management
+- Subscription tier configuration
+- Payment onboarding via Stripe Connect
+- Delivery scheduling tools
+
+### 🛒 Consumer Features
+- Location-based farm discovery
+- CSA share comparison tools
+- Subscription management dashboard
+- Secure checkout process
 
 ## The Challenges We Address
 
@@ -10,54 +33,76 @@
   <img src="docs/challenge-flow.png" width="80%" alt="Local food system challenges">
 </div>
 
-### 🌾 Farmer Challenges
+### Farmer Challenges
 **Unstable Revenue Streams**  
 Small farms remain dependent on volatile markets with:
 - No guaranteed weekly income
 - High customer acquisition costs
 - Limited direct-to-consumer infrastructure
 
-### 🛒 Consumer Pain Points
+### Consumer Pain Points
 **Inaccessible Local Food**  
 Despite demand, shoppers face:
 - Fragmented farm discovery
 - Inconvenient pickup options
 - No quality standardization
 
+## Tech Stack
+
+### Frontend
+- **React 18** with Vite (TSX) - Core UI framework
+- **Tailwind CSS** 3.4 - Styling system
+- **React Query** 5.62 - Server state management
+- **React Router** 7.0 - Client-side routing
+
+### Backend
+- **Express** 4.21 - REST API server
+- **Prisma** 6.0 - Database ORM
+- **PostgreSQL** - Primary datastore
+- **JWT** 9.0 - Authentication tokens
+
+### DevOps
+- **TypeScript** 5.7 - Static typing
+- **Jest** 29.7 - Testing framework
+- **GitHub Actions** - CI/CD pipeline
+- **Render** - Deployment hosting
+
 ## Our Approach
 
 ```mermaid
 graph TD
-  A[Farmer Onboarding] --> B((CSA Listings))
-  C[Consumer Search] --> B
-  B --> D{Subscription}
-  D --> E[Weekly Deliveries]
-  E --> F[Farmer Payments]
-```
+  subgraph Farmers
+    A[Farmer Onboarding] --> B[Create Listing]
+    B --> C[[Set Subscription Plans]]
+    C --> D[Manage Pickup/Delivery]
+  end
 
-## Technical Implementation
+  subgraph Platform
+    D --> E[[AI Match: Location/Produce]]
+    E --> F[Fee Engine]
+    F --> G[[Deduct 7% Platform Fee]]
+  end
 
-### Current Foundation
-```typescript:src/components/farm/FarmProfileView.tsx
-export const FarmProfileView = ({ profile }) => (
-  <div className="space-y-4">
-    <FarmHeader name={profile.name} />
-    <LocationMap coordinates={profile.location} />
-    <SubscriptionTiers tiers={profile.tiers} />
-  </div>
-)
-```
+  subgraph Consumers
+    H[Search Filters: Location/Price/Diet] --> I[[Discover Farms]]
+    I --> J[Subscribe]
+    J --> K[Manage Deliveries]
+    K --> L[Leave Feedback]
+  end
 
-### Immediate Focus
-```typescript:server/index.ts
-// Next priority: Payment onboarding
-app.post('/api/stripe-connect', async (req, res) => {
-  const account = await stripe.accounts.create({
-    type: 'standard',
-    email: req.user.email
-  });
-  // Save Stripe account to farm profile
-});
+  subgraph Admin
+    M[Monitor Metrics] --> N[Track Farmer Payouts]
+    N --> O[Resolve Disputes]
+  end
+
+  G --> P((Stripe Payout))
+  L --> E
+  O --> D
+  P --> Q[Farmer Revenue]
+
+  style E fill:#4CAF50,stroke:#388E3C
+  style G fill:#FFC107,stroke:#FFA000
+  style P fill:#2196F3,stroke:#1976D2
 ```
 
 ## Development Phases
