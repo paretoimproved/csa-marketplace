@@ -134,9 +134,11 @@ npm run dev
 ```
 
 ## Documentation
+- [System Architecture](docs/ARCHITECTURE.md) - Current and future state diagrams
 - [Farmer Onboarding](docs/FARMER_ONBOARDING.md)  
 - [API Endpoints](docs/API_REFERENCE.md)  
 - [Payment Flow](docs/PAYMENTS.md)
+- [Development Roadmap](docs/ROADMAP.md)
 
 ## Contribute
 We welcome farmers, developers, and local food advocates. See our [contributing guidelines](CONTRIBUTING.md).
